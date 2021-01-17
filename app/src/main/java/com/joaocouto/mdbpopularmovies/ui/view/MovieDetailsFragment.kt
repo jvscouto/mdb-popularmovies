@@ -1,22 +1,26 @@
 package com.joaocouto.mdbpopularmovies.ui.view
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.bumptech.glide.Glide
-import com.joaocouto.mdbpopularmovies.R
-import com.joaocouto.mdbpopularmovies.data.api.POSTER_BASE_URL
+import com.joaocouto.mdbpopularmovies.BuildConfig
 import com.joaocouto.mdbpopularmovies.data.api.TheMovieDB
 import com.joaocouto.mdbpopularmovies.data.repository.MovieDetailsRepository
 import com.joaocouto.mdbpopularmovies.data.utils.Status
+import com.joaocouto.mdbpopularmovies.databinding.FragmentMovieDetailsBinding
+import com.joaocouto.mdbpopularmovies.ui.extension.loadImage
 import com.joaocouto.mdbpopularmovies.ui.viewmodel.MovieDetailsViewModel
-import kotlinx.android.synthetic.main.fragment_movie.*
 
-class MovieDetailsFragment : Fragment(R.layout.fragment_movie) {
+class MovieDetailsFragment : Fragment() {
 
     private var movieId: Int = 0
     private lateinit var movieDetailsViewModel: MovieDetailsViewModel
+
+    private var _binding: FragmentMovieDetailsBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,40 +32,42 @@ class MovieDetailsFragment : Fragment(R.layout.fragment_movie) {
         setupObserver()
     }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentMovieDetailsBinding.inflate(inflater, container, false)
+
+        return binding.root
+    }
+
     private fun setupObserver() {
         movieDetailsViewModel.getMovieDetails().observe(this, Observer {
             when (it.status) {
                 Status.SUCCESS -> {
-                    progressBarMovieDetails.visibility = View.GONE
+                    binding.progressBarMovieDetails.visibility = View.GONE
                     it.data?.let { movieDetails ->
 
                         (activity as MainActivity).setActionBarTitle(movieDetails.title)
 
-                        txtMovieTitle.text = movieDetails.title
-                        txtMovieTagline.text = movieDetails.tagline
-                        txtMovieDescription.text = movieDetails.overview
+                        binding.txtMovieTitle.text = movieDetails.title
+                        binding.txtMovieTagline.text = movieDetails.tagline
+                        binding.txtMovieDescription.text = movieDetails.overview
 
-                        rbMovieAvaliation.rating = movieDetails.voteAverage.toFloat() / 2
+                        binding.rbMovieAvaliation.rating = movieDetails.voteAverage.toFloat() / 2
 
-                        val movieBannerUrl: String = POSTER_BASE_URL + movieDetails.backdropPath
-                        Glide.with(this)
-                            .load(movieBannerUrl)
-                            .into(ivBanner)
+                        val movieBannerUrl: String = BuildConfig.MdbImageBaseUrl + movieDetails.backdropPath
+                        binding.ivBanner.loadImage(movieBannerUrl)
 
-                        val moviePosterUrl: String = POSTER_BASE_URL + movieDetails.posterPath
-                        Glide.with(this)
-                            .load(moviePosterUrl)
-                            .into(ivPoster)
+                        val moviePosterUrl: String = BuildConfig.MdbImageBaseUrl + movieDetails.posterPath
+                        binding.ivPoster.loadImage(moviePosterUrl)
 
                     }
-                    llMovieDetails.visibility = View.VISIBLE
+                    binding.llMovieDetails.visibility = View.VISIBLE
                 }
                 Status.LOADING -> {
-                    progressBarMovieDetails.visibility = View.VISIBLE
-                    llMovieDetails.visibility = View.GONE
+                    binding.progressBarMovieDetails.visibility = View.VISIBLE
+                    binding.llMovieDetails.visibility = View.GONE
                 }
                 Status.ERROR -> {
-                    progressBarMovieDetails.visibility = View.GONE
+                    binding.progressBarMovieDetails.visibility = View.GONE
                 }
             }
         })

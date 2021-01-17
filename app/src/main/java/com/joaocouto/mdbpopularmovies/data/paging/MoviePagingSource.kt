@@ -11,7 +11,10 @@ class MoviePagingSource (
         private val compositeDisposable: CompositeDisposable
 ) : PageKeyedDataSource<Int, Movie>(){
 
-    override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Movie>) {
+    override fun loadInitial(
+        params: LoadInitialParams<Int>,
+        callback: LoadInitialCallback<Int, Movie>
+    ) {
         val numberOfItems = params.requestedLoadSize
         createObservable(1, 1, numberOfItems, callback, null)
     }

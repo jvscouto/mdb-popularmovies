@@ -15,11 +15,6 @@ class MovieDetailsViewModel(private val movieDetailsRepository: MovieDetailsRepo
     private val movieDetails = MutableLiveData<Resource<MovieDetails>>()
     private val compositeDisposable = CompositeDisposable()
 
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.dispose()
-    }
-
     init {
         fetchMovieDetails(movieId)
     }
@@ -41,4 +36,10 @@ class MovieDetailsViewModel(private val movieDetailsRepository: MovieDetailsRepo
     fun getMovieDetails(): LiveData<Resource<MovieDetails>> {
         return movieDetails
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.dispose()
+    }
+
 }
