@@ -1,7 +1,6 @@
 package com.joaocouto.mdbpopularmovies.ui.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.joaocouto.mdbpopularmovies.data.utils.Status
 import com.joaocouto.mdbpopularmovies.databinding.FragmentMovieListBinding
 import com.joaocouto.mdbpopularmovies.ui.viewmodel.MovieListViewModel
 
@@ -61,19 +59,7 @@ class MovieListFragment : Fragment() {
 
     private fun setupObserver(){
         viewModel.getMovieList().observe(viewLifecycleOwner, Observer {
-            when (it.status) {
-                Status.SUCCESS -> {
-                    it.data?.let { movieDetails ->
-                        adapter.submitList(movieDetails)
-                    }
-                }
-                Status.LOADING -> {
-                    Log.d("MDB_Log", "Loading")
-                }
-                Status.ERROR -> {
-                    Log.d("MDB_Log", "Error")
-                }
-            }
+            adapter.submitList(it)
         })
     }
 
