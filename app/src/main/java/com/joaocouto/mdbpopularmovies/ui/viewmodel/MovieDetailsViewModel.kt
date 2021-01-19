@@ -3,6 +3,7 @@ package com.joaocouto.mdbpopularmovies.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.joaocouto.mdbpopularmovies.data.api.TheMovieDB
 import com.joaocouto.mdbpopularmovies.data.model.MovieDetails
 import com.joaocouto.mdbpopularmovies.data.repository.MovieDetailsRepository
 import com.joaocouto.mdbpopularmovies.data.utils.Resource
@@ -10,10 +11,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class MovieDetailsViewModel(private val movieDetailsRepository: MovieDetailsRepository, movieId: Int) : ViewModel() {
+class MovieDetailsViewModel(movieId: Int) : ViewModel() {
 
     private val movieDetails = MutableLiveData<Resource<MovieDetails>>()
     private val compositeDisposable = CompositeDisposable()
+
+    private var movieDetailsRepository: MovieDetailsRepository = MovieDetailsRepository(TheMovieDB.getClient())
 
     init {
         fetchMovieDetails(movieId)

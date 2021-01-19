@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.joaocouto.mdbpopularmovies.BuildConfig
-import com.joaocouto.mdbpopularmovies.data.api.TheMovieDB
-import com.joaocouto.mdbpopularmovies.data.repository.MovieDetailsRepository
 import com.joaocouto.mdbpopularmovies.data.utils.Status
 import com.joaocouto.mdbpopularmovies.databinding.FragmentMovieDetailsBinding
 import com.joaocouto.mdbpopularmovies.ui.extension.loadImage
@@ -27,7 +25,7 @@ class MovieDetailsFragment : Fragment() {
 
         movieId = arguments?.getInt("id")!!
 
-        movieDetailsViewModel = MovieDetailsViewModel(MovieDetailsRepository(TheMovieDB.getClient()), movieId)
+        movieDetailsViewModel = MovieDetailsViewModel(movieId)
 
         setupObserver()
     }
